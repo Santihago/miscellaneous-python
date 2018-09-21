@@ -52,27 +52,30 @@ perf_threshold = 0.6  #XX% performance
 #we need a window to use keyboard events (the window needs to be active)
 win = visual.Window([600, 100], color='Gray', units='pix')
 soundDur = 3.  #sound duration (float)
-timer = core.clock()
+timer = core.Clock()
 
 #prepare for saving data to file
 allTrials = []
-filename = 'data' + os.path.sep + date + '_sound-staircase.csv'
+filename = 'data' + os.path.sep + data.getDateStr() + '_sound-staircase.csv'
 
 idx =0
 print("Starting experiment...")
+quit = False
 while True:
 
     print("Starting new trial. Vol = " + str(volume))
     timer.reset()  #restart timer
     detected = False  #restart default value
-    timer.add(soudDur)
-    s = Sine(freq=700, mul=volume).out(dur=SoundDur)  #start playing sound
+    timer.add(soundDur)
+    s = Sine(freq=700, mul=volume).out()  #start playing sound
+    event.clearEvents()  #clear previously pressed keys
     while timer.getTime()<0:
         #listen to keyboard
-        keypress = event.getKeys(keyList=['space', 'n', 'escape'])
-        if keypress == 'escape': core.quit()
-        if keypress == 'space': detected = True
-
+        keypress = event.getKeys(keyList=['space'])
+        if 'space' in keypress: detected = True
+    s.stop()
+    
+    core.wait(.5)
     #====================================
     # Staircase for adjusting tone volume
     #====================================
@@ -93,7 +96,7 @@ while True:
     goodperformance = running_perf_mean==1.0
     badperformance = running_perf_mean <= perf_threshold
     enoughtrials =  len(running_perf)==window_length
-    room4change = (volumeRatio + volumeRatioChange5) < 1  #3 decrements of unit
+    room4change = (volumeRatio + volumeRatioChange) < 1  #3 decrements of unit
     #if random performance and enough trials
     if badperformance and enoughtrials and room4change:
         print("    Low performance, decreasing ratio of change")
@@ -127,10 +130,10 @@ while True:
     allTrials += [thisTrial]
     
     idx += 1
-    if key == 'escape':
+    wantToQuit = event.getKeys(keyList=['escape'])
+    if 'escape' in wantToQuit:
         print("Final volume : " + str(volume))
         arr = np.array(allTrials)
-        date = data.getDateStr()
         #--------------
         # Save to file
         #--------------
