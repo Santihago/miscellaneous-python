@@ -55,44 +55,50 @@ for thisXPos in ticksXPos: # Mini-ticks
 #moving slider
 rs_slider = visual.Rect(win, width=.25, height=1., fillColor = rs_col,
                         lineColor = rs_col)
-                       
+                        
+#--------------
+# Prepare scale
+#--------------
+
+#prepare and reset between repeated uses of the same scale
+event.clearEvents()
+detected = False
+detectedRT = None
+RATING = None
+ratings_thisTrial = []  #continuous rating vector
+rs_slider.setFillColor('#FEFFFA')
+mouse.setPos([0,0])
+mouse.clickReset() 
+
+#start showing the scale    
 while True:
 
-    #prepare and reset between repeated uses of the same scale
-    event.clearEvents()
-    detected = False
-    detectedRT = None
-    RATING = None
-    ratings_thisTrial = []  #continuous rating vector
-    rs_slider.setFillColor('#FEFFFA')
-    mouse.setPos([0,0])
-    mouse.clickReset()
-    #start showing the scale
-    for thisFrame in range(timeInFrames): 
-        #draw all components of the rating scale
-        for stim in rs_stims:
-            stim.draw()
-        #set slider and dynamic text position to mouse and draw 
-        m_x, m_y = mouse.getPos()
-        if m_x < _rs_min: m_x = _rs_min  #clipped -X position
-        if m_x > _rs_max: m_x = _rs_max  #clipped +X position
-        rs_slider.setPos([m_x, 0])
-        rs_slider.draw()
-        #re-scale rating value to given range
-        RATING = int(((m_x+_rs_max)/_rs_max)*(scale_max/2))
-        #draw value of rating on the screen at mouse position
-        dyn_txt.setPos([m_x, dynTxtYPos])
-        dyn_txt.setText(str(RATING)+ " %")
-        dyn_txt.draw()
-        #flip everything
-        win.flip()
-        #listen to mouse click and record timestamp
-        buttons, RT = mouse.getPressed(getTime=True)  #returns 3-item list and time since reset
-        if not detected and buttons[0]:  #first click detected
-            detected = True
-            detectedRT = round(RT[0], 2)  #timestamp
-            rs_slider.setFillColor('#1A7AF8')  #change slider color to blue
-            mouse.clickReset()  #reset mouse
-        if event.getKeys(['escape']): core.quit()
-        #save continuous rating sampled at each frame in a vector
-        ratings_thisTrial.append(RATING)
+    #draw all components of the rating scale
+    for stim in rs_stims:
+        stim.draw()
+    #set slider and dynamic text position to mouse and draw 
+    m_x, m_y = mouse.getPos()
+    if m_x < _rs_min: m_x = _rs_min  #clipped -X position
+    if m_x > _rs_max: m_x = _rs_max  #clipped +X position
+    rs_slider.setPos([m_x, 0])
+    rs_slider.draw()
+    #re-scale rating value to given range
+    RATING = int(((m_x+_rs_max)/_rs_max)*(scale_max/2))
+    #draw value of rating on the screen at mouse position
+    dyn_txt.setPos([m_x, dynTxtYPos])
+    dyn_txt.setText(str(RATING)+ " %")
+    dyn_txt.draw()
+    #flip everything
+    win.flip()
+    
+    #listen to mouse click and record timestamp
+    buttons, RT = mouse.getPressed(getTime=True)  #returns 3-item list and time since reset
+    if not detected and buttons[0]:  #first click detected
+        detected = True
+        detectedRT = round(RT[0], 2)  #timestamp
+        rs_slider.setFillColor('#1A7AF8')  #change slider color to blue
+        mouse.clickReset()  #reset mouse
+    #save continuous rating sampled at each frame in a vector
+    ratings_thisTrial.append(RATING)
+    
+    if event.getKeys(['escape']): core.quit()
