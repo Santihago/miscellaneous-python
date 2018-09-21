@@ -3,8 +3,7 @@ from psychopy import visual, core, event
 
 """
 Creating my own rating scale for full flexibility.
-You should set exp units in deg (degrees of visual angle)
-I follow guidelines from Matejka 2016: No ticks, 2 labels, dynamic text
+Guidelines from Matejka 2016: No ticks (use bands), 2 labels, dynamic text
 feedback
 """
 
