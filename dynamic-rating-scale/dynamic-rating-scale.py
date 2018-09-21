@@ -27,7 +27,6 @@ dynTxtYPos = 1 #y position (in DVA) of dynamic rating text
 labels = ["0 %", "100 %"]  #text value of scale labels
 labels_pos = [-1, 1]  #pos values from -1 to 1
 ticks_pos = [-.5, 0, .5]  #pos values of ticks/bands
-dyn_txt = visual.TextStim(win, text=u"", height=rs_txt_size, color = rs_txt_col)
 
 #------------- No need to adjust these
 _rs_max = rs_size/2  #scale rightmost value
@@ -49,10 +48,12 @@ for thisXPos in ticksXPos: # Mini-ticks
 #moving slider
 rs_slider = visual.Rect(win, width=.25, height=1., fillColor = rs_col,
                         lineColor = rs_col)
-                        
-#--------------
-# Prepare scale
-#--------------
+#moving text
+dyn_txt = visual.TextStim(win, text=u"", height=rs_txt_size, color = rs_txt_col)
+
+#--------------------------------------
+# Preparation before showing the scale
+#--------------------------------------
 
 #prepare and reset between repeated uses of the same scale
 event.clearEvents()
