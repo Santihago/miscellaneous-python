@@ -49,12 +49,12 @@ running_perf = np.array([])  # Running average of performance
 window_length = 10  #change vol unit if 3 non-detections in the last 6 trials
 perf_threshold = 0.6  #XX% performance
 
-# We need a window to use keyboard events (the window needs to be active)
+#we need a window to use keyboard events (the window needs to be active)
 win = visual.Window([600, 100], color='Gray', units='pix')  # For testing only
 soundDur = 3.  # sound duration (float)
 timer = core.clock()
 
-# Prepare for saving data to file
+#prepare for saving data to file
 allTrials = []
 filename = 'data' + os.path.sep + date + '_sound-staircase.csv'
 
@@ -63,10 +63,10 @@ print("Starting experiment...")
 while True:
 
     print("Starting new trial. Vol = " + str(volume))
-    timer.reset()  # Restart timer
-    detected = False  # Restart default value
+    timer.reset()  #restart timer
+    detected = False  #restart default value
     timer.add(soudDur)
-    s = Sine(freq=700, mul=volume).out(dur=SoundDur)  # Start playing sound
+    s = Sine(freq=700, mul=volume).out(dur=SoundDur)  #start playing sound
     while timer.getTime()<0:
         #listen to keyboard
         keypress = event.getKeys(keyList=['space', 'n', 'escape'])
@@ -81,32 +81,32 @@ while True:
     # 1. Calculate running average of perf 
     #--------------------------------------
     
-    # Add last detection responses to running average
+    #add last detection responses to running average
     if len(running_perf)<window_length:  # Add new value only
         running_perf = np.concatenate((running_perf[:], [detected]))
     elif len(running_perf)==window_length:  # Add a new value and remove first value
         running_perf = np.concatenate((running_perf[1:], [detected]))
     
-    # Calculate running average of performance
+    #calculate running average of performance
     running_perf_mean = np.count_nonzero(running_perf)/len(running_perf)
     
     goodperformance = running_perf_mean==1.0
     badperformance = running_perf_mean <= perf_threshold
     enoughtrials =  len(running_perf)==window_length
-    room4change = (volumeRatio + volumeRatioChange5) < 1  # 3 decrements of unit
-    # If random performance and enough trials
+    room4change = (volumeRatio + volumeRatioChange5) < 1  #3 decrements of unit
+    #if random performance and enough trials
     if badperformance and enoughtrials and room4change:
         print("    Low performance, decreasing ratio of change")
-        # Make the increments/decrements smaller
+        #make the steps smaller
         volumeRatio += volumeRatioChange
-        running_perf = np.array([])  # Re-start running average
+        running_perf = np.array([])  #restart running average
 
-    # If perfomance is good, return to previous ratios of change
+    #if perfomance is good, return to previous ratios of change
     if goodperformance and enoughtrials and volumeRatio>volumeRatioStart:
         print("    Good performance, increasing ratio of change")
-        # Make the increments/decrements bigger
+        #make the steps bigger
         volumeRatio -= volumeRatioChange
-        running_perf = np.array([])  # Restart running average
+        running_perf = np.array([])  #restart running average
  
     #--------------------------------
     # 3. Modify volume for next trial
