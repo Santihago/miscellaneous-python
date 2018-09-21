@@ -1,97 +1,98 @@
 from __future__ import division
 from psychopy import visual, core, event
 
-#--------------
-# CREATE WINDOW
-#--------------
+"""
+Creating my own rating scale for full flexibility.
+You should set exp units in deg (degrees of visual angle)
+I follow guidelines from Matejka 2016: No ticks, 2 labels, dynamic text
+feedback
+"""
 
-win = visual.Window([800, 600], color='Gray', units='pix')  # For testing only
+#open a window
+win = visual.Window([800, 600], color='Gray', units='deg')
+#create a mouse object
+mouse = event.Mouse(visible=True, win=win)
+#refresh rate
+hz = 60
+#time of rating scale
+responseTime = 3.  #response time in seconds
+timeInFrames = responseTime * hz
 
 #--------------
 # RATING SCALE
 #--------------
 
-# Creating my own rating scale for full flexibility.
-# You should set exp units in deg (degrees of visual angle)
-# I follow guidelines from Matejka 2016: No ticks, 2 labels, dynamic text
-# feedback
-
 #------------- You can adjust these
-scale_max = 100 # Maximum rating in the rating scale (int)
-rs_max = 7.5  # scale upper limit in degrees of visual angle
-
-#------------- No need to adjust these
-rs_col = 'black'
-rs_txt_col = 'black'
-rs_txt_size = .6
-labelsYPos = -1
-dynTxtYPos = 1
-_rs_min = (-1 * rs_max)
-ticksXPos = [x * rs_max for x in [-.5, 0, .5]]  # Bands
-labelsXPos = [x * rs_max for x in [-1, 1]]
-labels = ["0 %", "100 %"]
+rs_size = 14 #scale size in degrees of visual angle (DVA)
+scale_max = 100 #maximum rating in the rating scale (int)
+rs_col = '#373F51'  #charcoal color
+rs_txt_col = '#373F51'
+rs_txt_size = .7  #text height in dva
+labelsYPos = -1  # Y position (in DVA) of text labels
+dynTxtYPos = 1 # Y position (in DVA) of dynamic rating text
+labels = ["0 %", "100 %"]  #text valye of scale labels
+labels_pos = [-1, 1]  #pos values from -1 to 1
+ticks_pos = [-.5, 0, .5]  #pos values of ticks/bands
 dyn_txt = visual.TextStim(win, text=u"", height=rs_txt_size, color = rs_txt_col)
 
-# Scale stimuli: horizontal bar, labels, ticks/bands
-rs_stims = []
-rs_stims += [visual.Rect(win, width=rs_max*2, height=.1, fillColor = rs_col, 
+#------------- No need to adjust these
+_rs_max = rs_size/2  #scale rightmost value
+_rs_min = (-1 * _rs_max)  #scale leftmost value
+rs_stims = []  #scale stimuli list
+#horizontal bar
+rs_stims += [visual.Rect(win, width=_rs_max*2, height=.1, fillColor = rs_col,
              lineColor = rs_col)]
-#for thisXPos in ticksXPos: # Mini-ticks
-#    rs_stims += [visual.Rect(win, width=1, height=.25, pos = [thisXPos, 0], 
-#                 fillColor = 'white', opacity = .75)]
-for nr, thisXPos in enumerate(labelsXPos):  # Text
-    rs_stims += [visual.TextStim(win, text=labels[nr], height=rs_txt_size, 
+#add text labels
+labelsXPos = [x * _rs_max for x in labels_pos]
+for nr, thisXPos in enumerate(labelsXPos):
+    rs_stims += [visual.TextStim(win, text=labels[nr], height=rs_txt_size,
                  pos = [thisXPos, labelsYPos], color = rs_txt_col)]
-
-# Moving slider
-rs_slider = visual.Rect(win, width=.25, height=.75, opacity = 1, 
-                        fillColor = rs_col, lineColor = rs_col)
-
-#-------
-# MOUSE
-#-------
-
-mouse = event.Mouse(visible=True, win=win)
-
+#add ticks / bands
+ticksXPos = [x * _rs_max for x in ticks_pos]
+for thisXPos in ticksXPos: # Mini-ticks
+    rs_stims += [visual.Rect(win, width=1, height=.25, pos = [thisXPos, 0], 
+                 fillColor = rs_col, opacity = .75)]
+#moving slider
+rs_slider = visual.Rect(win, width=.25, height=1., fillColor = rs_col,
+                        lineColor = rs_col)
+                       
 while True:
-#---------------------------
-# Rating Scale during sound
-#---------------------------
 
-    # Prepare and reset between repeated uses of the same scale
-    event.clearEvents()  
+    #prepare and reset between repeated uses of the same scale
+    event.clearEvents()
     detected = False
     detectedRT = None
-    rating = None
-    rs_slider.setOpacity(.5)
-    mouse.setPos(0,0)
+    RATING = None
+    ratings_thisTrial = []  #continuous rating vector
+    rs_slider.setFillColor('#FEFFFA')
+    mouse.setPos([0,0])
     mouse.clickReset()
-    # Start showing the scale
-    for thisFrame in range(timeInFrames["CS"]): 
-        # Draw all components of the rating scale
+    #start showing the scale
+    for thisFrame in range(timeInFrames): 
+        #draw all components of the rating scale
         for stim in rs_stims:
             stim.draw()
-        # Set slider position (with limits)
+        #set slider and dynamic text position to mouse and draw 
         m_x, m_y = mouse.getPos()
-        if m_x < _rs_min: m_x = _rs_min
-        if m_x > rs_max: m_x = rs_max
-        # Re-scale rating
-        RATING = int(((m_x+rs_max)/rs_max)*(scale_max/2))
+        if m_x < _rs_min: m_x = _rs_min  #clipped -X position
+        if m_x > _rs_max: m_x = _rs_max  #clipped +X position
         rs_slider.setPos([m_x, 0])
         rs_slider.draw()
+        #re-scale rating value to given range
+        RATING = int(((m_x+_rs_max)/_rs_max)*(scale_max/2))
+        #draw value of rating on the screen at mouse position
         dyn_txt.setPos([m_x, dynTxtYPos])
         dyn_txt.setText(str(RATING)+ " %")
         dyn_txt.draw()
+        #flip everything
         win.flip()
-        # Listen to keyboard and mouse
-        #rating = m_x  # values in degrees
-        buttons, RT = mouse.getPressed(getTime=True)  # returns 3-item list and time since reset
-        if not detected and buttons[0]:  # First click detected
-            detected is True
-            detectedRT = RT[0]
-            if triggers: sendTrigger(triggerList["resp"])
-            rs_slider.setOpacity(1)
-            mouse.clickReset()
+        #listen to mouse click and record timestamp
+        buttons, RT = mouse.getPressed(getTime=True)  #returns 3-item list and time since reset
+        if not detected and buttons[0]:  #first click detected
+            detected = True
+            detectedRT = round(RT[0], 2)  #timestamp
+            rs_slider.setFillColor('#1A7AF8')  #change slider color to blue
+            mouse.clickReset()  #reset mouse
         if event.getKeys(['escape']): core.quit()
-        #print("Rating: " + str(rating))
-        #print("FrameNr: " + str(thisFrame))
+        #save continuous rating sampled at each frame in a vector
+        ratings_thisTrial.append(RATING)
