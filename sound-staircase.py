@@ -34,24 +34,24 @@ print("Starting server...")
 #create and boot a sound server
 sv = Server(sr=44100, nchnls=2, buffersize=128, duplex=0, winhost="asio")
 sv.verbosity = 0
-sv.boot()   # Initialize audio stream
-sv.start()  # Activates server processing loop
+sv.boot()   #initialize audio stream
+sv.start()  #activates server processing loop
 
 #some staircase parameters
-volumeStart = 0.0005  # Initial volume value. Corresponds to pyo's "mul" (1 dB == 0.001 mul)
-volumeRatioStart = 0.812  # Volume reduction is done by dividing by this value (corresponds to -3dB decrease in perceived loudness)
-volumeRatioChange = 0.05  # Value that will be added to volumeRatio to change step size (will never go above 1.0)
+volumeStart = 0.0005  #initial volume value. Corresponds to pyo's "mul" (1 dB == 0.001 mul)
+volumeRatioStart = 0.812  #volume reduction is done by dividing by this value (corresponds to -3dB decrease in perceived loudness)
+volumeRatioChange = 0.05  #value that will be added to volumeRatio to change step size (will never go above 1.0)
 volumeRatio = volumeRatioStart
 volume = volumeStart
 
 #running average
-running_perf = np.array([])  # Running average of performance
+running_perf = np.array([])  #running average of performance
 window_length = 10  #change vol unit if 3 non-detections in the last 6 trials
 perf_threshold = 0.6  #XX% performance
 
 #we need a window to use keyboard events (the window needs to be active)
-win = visual.Window([600, 100], color='Gray', units='pix')  # For testing only
-soundDur = 3.  # sound duration (float)
+win = visual.Window([600, 100], color='Gray', units='pix')
+soundDur = 3.  #sound duration (float)
 timer = core.clock()
 
 #prepare for saving data to file
@@ -82,9 +82,9 @@ while True:
     #--------------------------------------
     
     #add last detection responses to running average
-    if len(running_perf)<window_length:  # Add new value only
+    if len(running_perf)<window_length:  #add new value only
         running_perf = np.concatenate((running_perf[:], [detected]))
-    elif len(running_perf)==window_length:  # Add a new value and remove first value
+    elif len(running_perf)==window_length:  #add a new value and remove first value
         running_perf = np.concatenate((running_perf[1:], [detected]))
     
     #calculate running average of performance
@@ -119,9 +119,9 @@ while True:
         volume /= volumeRatio
         print("    Volume increased!")
 
-    #--------------
-    # Save as data
-    #--------------
+    #------------------
+    # Add to data list
+    #------------------
     
     thisTrial = [idx, volume, detected, running_perf_mean, volumeRatio]
     allTrials += [thisTrial]
@@ -131,5 +131,8 @@ while True:
         print("Final volume : " + str(volume))
         arr = np.array(allTrials)
         date = data.getDateStr()
+        #--------------
+        # Save to file
+        #--------------
         np.savetxt(filename, arr, delimiter=",") #, fmt = '%.10f')
         core.quit()
