@@ -112,7 +112,7 @@ while True:
         running_perf = np.array([])  #restart running average
  
     #--------------------------------
-    # 3. Modify volume for next trial
+    # 2. Modify volume for next trial
     #--------------------------------
     
     if detected:
