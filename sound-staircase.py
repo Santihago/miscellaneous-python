@@ -16,8 +16,8 @@ the volume is divided by 0.812 in order to increase its value.
 
 A running average of performance is also calculated (ratio of correct/incorrect
 detections). If performance falls below a threshold of 60%, the staircase steps
-change by becoming smaller (the 0.812 value is increased by 0.05), up to 3 
-changes, in order to have a fine-grained approximation of the threshold.
+become smaller (the 0.812 value is increased by 0.05), up to 3 changes of step
+size, in order to have a better approximation of the auditory threshold.
 
 The data is then saved in a csv file.
 
