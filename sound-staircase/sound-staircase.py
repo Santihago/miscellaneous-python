@@ -38,7 +38,7 @@ sv.boot()   #initialize audio stream
 sv.start()  #activates server processing loop
 
 #some staircase parameters
-volumeStart = 0.0005  #initial volume value. Corresponds to pyo's "mul" (1 dB == 0.001 mul)
+volumeStart = 0.0002  #initial volume value. Corresponds to pyo's "mul" (1 dB == 0.001 mul)
 volumeRatioStart = 0.812  #volume reduction is done by dividing by this value (corresponds to -3dB decrease in perceived loudness)
 volumeRatioChange = 0.05  #value that will be added to volumeRatio to change step size (will never go above 1.0)
 volumeRatio = volumeRatioStart
