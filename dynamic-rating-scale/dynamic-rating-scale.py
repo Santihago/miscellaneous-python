@@ -11,11 +11,6 @@ feedback
 win = visual.Window([800, 600], color='Gray', units='deg')
 #create a mouse object
 mouse = event.Mouse(visible=True, win=win)
-#refresh rate
-hz = 60
-#time of rating scale
-responseTime = 3.  #response time in seconds
-timeInFrames = responseTime * hz
 
 #--------------
 # RATING SCALE
