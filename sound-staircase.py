@@ -26,8 +26,6 @@ Universite Libre de Bruxelles
 smunozmo@ulb.ac.be
 """
 
-
-
 #==================
 # Initial settings
 #==================
