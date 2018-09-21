@@ -22,9 +22,9 @@ scale_max = 100 #maximum rating in the rating scale (int)
 rs_col = '#373F51'  #charcoal color
 rs_txt_col = '#373F51'
 rs_txt_size = .7  #text height in dva
-labelsYPos = -1  # Y position (in DVA) of text labels
-dynTxtYPos = 1 # Y position (in DVA) of dynamic rating text
-labels = ["0 %", "100 %"]  #text valye of scale labels
+labelsYPos = -1  #y position (in DVA) of text labels
+dynTxtYPos = 1 #y position (in DVA) of dynamic rating text
+labels = ["0 %", "100 %"]  #text value of scale labels
 labels_pos = [-1, 1]  #pos values from -1 to 1
 ticks_pos = [-.5, 0, .5]  #pos values of ticks/bands
 dyn_txt = visual.TextStim(win, text=u"", height=rs_txt_size, color = rs_txt_col)
