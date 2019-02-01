@@ -1,4 +1,4 @@
-# Miscellaneous Python scripts
+# Miscellaneous Python and Psychopy scripts
 
 This repository contains miscellaneous scripts and snippets that might be useful.
 
@@ -12,14 +12,14 @@ My own rating scale for full flexibility.
 Guidelines from Matejka 2016: No ticks (use bands), 2 labels and dynamic text
 feedback.
 
-#### Prerequisites
+### Prerequisites
 
 The task was developed to run on Python 2.7 using the following packages. It can probably be easily adapted to Python 3. 
 
 * [Python 2.7](https://www.python.org/downloads/release/python-2715/)
 * [Psychopy 1.90.1](https://www.github.com/psychopy/psychopy/releases/tag/1.90.1) - free package for running neuroscience, psychology and psychophysics experiments
 
-### Sound staircase
+## Sound staircase
 
 ```
 \dynamic-rating-scale\sound-staircase.py
@@ -38,7 +38,7 @@ become smaller (the 0.812 value is increased by 0.05), up to 3 changes of step
 size, in order to have a better approximation of the auditory threshold.
 The data is then saved in a `.csv` file.
 
-#### Prerequisites
+### Prerequisites
 
 The task was developed to run on Python 2.7 using the following packages. It can probably be easily adapted to Python 3. 
 
