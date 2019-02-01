@@ -32,8 +32,6 @@ become smaller (the 0.812 value is increased by 0.05), up to 3 changes of step
 size, in order to have a better approximation of the auditory threshold.
 The data is then saved in a `.csv` file.
 
-## Installing
-
 ### Prerequisites
 
 The task was developed to run on Python 2.7 using the following packages. It can probably be easily adapted to Python 3. 
@@ -56,10 +54,6 @@ On the Command Prompt or Terminal
 ## License
 
 Released under the MIT license – see the [LICENSE.md](LICENSE.md) file for details
-
-## Disclaimer
-
-All shared material was developed for my own research purposes, and I cannot guarantee that it is free of errors or bugs. I am therefore not responsible for any error, bug, or malfunction you may encounter in your own use. If you notice something wrong, please let me know so I can correct it.
 
 ## Acknowledgments
 
